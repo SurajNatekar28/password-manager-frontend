@@ -6,22 +6,23 @@ function Vault({ token }) {
   const [site, setSite] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
+  // ✅ Inline fetchVault inside useEffect to avoid dependency warning
   useEffect(() => {
-    fetchVault();
-  }, []);
+    const fetchVault = async () => {
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_API}/vault/get`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setVault(res.data);
+      } catch (err) {
+        alert("Failed to load vault.");
+      }
+    };
 
-  const fetchVault = async () => {
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_API}/vault/get`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setVault(res.data);
-    } catch (err) {
-      alert("Failed to load vault.");
-    }
-  };
+    fetchVault();
+  }, [token]); // ✅ token as dependency
 
   const addPassword = async () => {
     try {
@@ -34,8 +35,15 @@ function Vault({ token }) {
         }
       });
       alert("Password added.");
-      fetchVault();
-      setSite(""); setNewPassword("");
+      // Fetch again after adding
+      const res = await axios.get(`${process.env.REACT_APP_API}/vault/get`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setVault(res.data);
+      setSite("");
+      setNewPassword("");
     } catch (err) {
       alert("Failed to add password.");
     }
@@ -52,8 +60,16 @@ function Vault({ token }) {
         ))}
       </ul>
       <h3>Add New Password</h3>
-      <input placeholder="Site" value={site} onChange={e => setSite(e.target.value)} />
-      <input placeholder="Password" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+      <input
+        placeholder="Site"
+        value={site}
+        onChange={e => setSite(e.target.value)}
+      />
+      <input
+        placeholder="Password"
+        value={newPassword}
+        onChange={e => setNewPassword(e.target.value)}
+      />
       <button onClick={addPassword}>Add</button>
     </div>
   );

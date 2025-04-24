@@ -7,7 +7,7 @@ function Register() {
 
   const register = async () => {
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API}/auth/register`, {
+       await axios.post(`${process.env.REACT_APP_API}/auth/register`, {
         email,
         password
       });
