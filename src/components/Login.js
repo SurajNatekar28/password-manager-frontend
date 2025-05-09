@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 function Login({ setToken }) {
@@ -20,11 +19,33 @@ function Login({ setToken }) {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-      <input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-      <button onClick={login}>Login</button>
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div className="card p-4 shadow" style={{ width: "100%", maxWidth: "400px" }}>
+        <h3 className="text-center mb-4">Login</h3>
+        <div className="form-group mb-3">
+          <label>Email</label>
+          <input
+            type="email"
+            className="form-control"
+            placeholder="Enter your email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="form-group mb-3">
+          <label>Password</label>
+          <input
+            type="password"
+            className="form-control"
+            placeholder="Enter your password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+        </div>
+        <button className="btn btn-primary w-100" onClick={login}>
+          Login
+        </button>
+      </div>
     </div>
   );
 }
