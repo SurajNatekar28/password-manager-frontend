@@ -1,7 +1,10 @@
+import React from 'react';
 import { useState } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Vault from "./components/Vault";
+
+
 
 function App() {
   const [token, setToken] = useState(null);
