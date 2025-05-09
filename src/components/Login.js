@@ -1,52 +1,90 @@
 import React, { useState } from "react";
 import axios from "axios";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  Typography,
+  Snackbar,
+  Alert
+} from "@mui/material";
 
 function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [snack, setSnack] = useState({ open: false, message: "", severity: "success" });
+
+  const handleCloseSnack = () => setSnack({ ...snack, open: false });
 
   const login = async () => {
     try {
       const res = await axios.post(`${process.env.REACT_APP_API}/auth/login`, {
         email,
-        password
+        password,
       });
-      alert("Login successful!");
+      setSnack({ open: true, message: "Login successful!", severity: "success" });
       setToken(res.data.token);
     } catch (err) {
-      alert("Login failed. Check credentials.");
+      setSnack({ open: true, message: "Login failed. Check credentials.", severity: "error" });
     }
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
-      <div className="card p-4 shadow" style={{ width: "100%", maxWidth: "400px" }}>
-        <h3 className="text-center mb-4">Login</h3>
-        <div className="form-group mb-3">
-          <label>Email</label>
-          <input
-            type="email"
-            className="form-control"
-            placeholder="Enter your email"
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        bgcolor: "#f4f6f8",
+      }}
+    >
+      <Card sx={{ width: 360, boxShadow: 6 }}>
+        <CardContent>
+          <Typography variant="h5" align="center" gutterBottom>
+            Sign In
+          </Typography>
+          <TextField
+            label="Email"
+            variant="outlined"
+            fullWidth
+            margin="normal"
             value={email}
             onChange={e => setEmail(e.target.value)}
           />
-        </div>
-        <div className="form-group mb-3">
-          <label>Password</label>
-          <input
+          <TextField
+            label="Password"
             type="password"
-            className="form-control"
-            placeholder="Enter your password"
+            variant="outlined"
+            fullWidth
+            margin="normal"
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
-        </div>
-        <button className="btn btn-primary w-100" onClick={login}>
-          Login
-        </button>
-      </div>
-    </div>
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ mt: 2 }}
+            onClick={login}
+          >
+            Login
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Snackbar
+        open={snack.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnack}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity={snack.severity} onClose={handleCloseSnack}>
+          {snack.message}
+        </Alert>
+      </Snackbar>
+    </Box>
   );
 }
 
