@@ -52,7 +52,7 @@ function Vault({ token }) {
 
   return (
     <div>
-      <h2>🔐 Your Vault</h2>
+      <h2> Your Vault</h2>
       <ul>
         {vault.map((entry, index) => (
           <li key={index}>
